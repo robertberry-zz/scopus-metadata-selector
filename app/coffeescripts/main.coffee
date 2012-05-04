@@ -6,10 +6,25 @@ require.config
     underscore: "libs/underscore/underscore-min"
     backbone: "libs/backbone/backbone-min"
     text: "libs/require/text"
+    Mustache: "libs/mustache/mustache"
+    templates: "../templates"
 
-includes = ["jquery", "text!../api_key"]
+includes = [
+  "jquery",
+  "text!../api_key",
+  "Renderer",
+  "collections/Documents",
+  "views/SearchResults"
+]
 
-require includes, ($, api_key) ->
+require includes, ($, api_key, Renderer, Documents, SearchResults) ->
+  documents = new Documents()
+  results = new SearchResults(collection: documents)
+  window.docs = documents
+  $('#sciverse').html results.el
+
+  renderer = new Renderer(docs)
+  sciverse.setRenderer renderer
 
   form = $("#sciverse_search_form")
   query = form.children("input[name=sciverse_search_string]")
@@ -17,6 +32,9 @@ require includes, ($, api_key) ->
 
   on_complete = ->
     submit.attr "disabled", no
+
+  window.renderResults = (response) ->
+    console.debug response
 
   run_search = ->
     submit.attr "disabled", yes

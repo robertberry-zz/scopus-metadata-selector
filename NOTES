@@ -1,0 +1,4 @@
+# Notes
+
+Be careful with constructors. Normal CoffeeScript classes should have their constructor
+as the 'constructor' property. Classes that extend Backbone classes should use 'initalize'.
