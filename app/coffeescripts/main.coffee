@@ -14,39 +14,39 @@ includes = [
   "text!../api_key",
   "Renderer",
   "collections/Documents",
-  "views/SearchResults"
+  "views/SearchResults",
+  "routers/SearchRouter"
 ]
 
-require includes, ($, api_key, Renderer, Documents, SearchResults) ->
-  documents = new Documents()
-  results = new SearchResults(collection: documents)
-  window.docs = documents
-  $('#sciverse').html results.el
+FORM_SELECTOR = "#sciverse_search_form"
+SEARCH_INPUT_SELECTOR = "input[name=sciverse_search_string]"
+SUBMIT_BUTTON_SELECTOR = "input[type=submit]"
 
-  renderer = new Renderer(docs)
-  sciverse.setRenderer renderer
+require includes, ($, api_key, Renderer, Documents, SearchResults, \
+    SearchRouter) ->
+  sciverse.setApiKey api_key
 
-  form = $("#sciverse_search_form")
-  query = form.children("input[name=sciverse_search_string]")
-  submit = form.children("input[type=submit]")
+  form = $(FORM_SELECTOR)
+  query = form.children(SEARCH_INPUT_SELECTOR)
+  submit = form.children(SUBMIT_BUTTON_SELECTOR)
 
-  on_complete = ->
+  app = new SearchRouter()
+  app.on "search:start", (search_string) ->
+    query.val search_string
+    submit.attr "disabled", yes
+  app.on "search:end", ->
     submit.attr "disabled", no
 
-  window.renderResults = (response) ->
-    console.debug response
+  documents = new Documents()
+  results = new SearchResults(collection: documents)
+  $('#sciverse').html results.el
 
-  run_search = ->
-    submit.attr "disabled", yes
-    search = new searchObj
-    search.setSearch query.val()
-    sciverse.search search
+  renderer = new Renderer(documents)
+  sciverse.setRenderer renderer
 
-  on_submit = (event) ->
+  form.submit (event) ->
     event.preventDefault()
-    run_search()
+    app.navigate("search/" + query.val(), trigger: yes)
 
-  form.submit(on_submit)
+  Backbone.history.start pushState: no
 
-  sciverse.setApiKey api_key
-  sciverse.setCallback on_complete
