@@ -6,3 +6,7 @@ div.search_result table th {
     text-align: left;
     padding-right: 2em;
 }
+
+div.spinner {
+    text-align: center;
+}
