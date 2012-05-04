@@ -45,6 +45,12 @@ require includes, ($, api_key, Renderer, Documents, SearchResults, \
   documents = new Documents()
   results = new SearchResults(collection: documents)
 
+  results.on "select", (selected) ->
+    console.debug "select", selected
+
+  results.on "deselect", (deselected) ->
+    console.debug "deselect", deselected
+
   renderer = new Renderer(documents)
   sciverse.setRenderer renderer
 

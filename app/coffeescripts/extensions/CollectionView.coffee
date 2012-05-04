@@ -21,7 +21,7 @@ define includes, ($, _, Backbone) ->
       collection.bind "add", _.bind(@render, @)
       collection.bind "remove", _.bind(@render, @)
       collection.bind "reset", _.bind(@render, @)
-      @items = {}
+      @items = []
 
     # Re-renders the view and its subviews. Note: this is slow, rewrite to
     # only remove the views that have actually been removed, instead of
@@ -32,9 +32,24 @@ define includes, ($, _, Backbone) ->
       @$el.html ""
       @items = @collection.map (model) =>
         new @item_view model: model
+      @start_event_forwarding()
       @trigger "refresh", @items
       for view in @items
         view.render()
         @$el.append view.el
+
+    # Allows you to specify in sub views a 'forward_events' parameter. Then
+    # when the sub view fires an event whose name is in the forward_events
+    # list, the event is also fired by the CollectionView.
+    start_event_forwarding: ->
+      _(@items).each (item) =>
+        if item.forward_events
+          for event_name in item.forward_events
+            do (event_name) =>
+              item.on event_name, =>
+                # convert arguments object into real array
+                args = [].slice.call arguments
+                args.unshift event_name
+                @trigger.apply @, args
 
   CollectionView
