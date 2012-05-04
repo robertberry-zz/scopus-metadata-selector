@@ -1,58 +1,48 @@
+<h3>{{ title }}</h3>
+
 <table>
   <tr>
-    <th>affiliation</th>
-    <td>{{ affiliation }}</td>
-  </tr>
-  <tr>
-    <th>authlist</th>
-    <td>{{ authlist }}</td>
-  </tr>
-  <tr>
-    <th>citedbycount</th>
-    <td>{{ citedbycount }}</td>
-  </tr>
-  <tr>
-    <th>doctype</th>
+    <th>Type</th>
     <td>{{ doctype }}</td>
   </tr>
   <tr>
-    <th>doi</th>
-    <td>{{ doi }}</td>
-  </tr>
-  <tr>
-    <th>eid</th>
-    <td>{{ eid }}</td>
-  </tr>
-  <tr>
-    <th>inwardurl</th>
-    <td>{{ inwardurl }}</td>
-  </tr>
-  <tr>
-    <th>issn</th>
-    <td>{{ issn }}</td>
-  </tr>
-  <tr>
-    <th>issue</th>
+    <th>Issue</th>
     <td>{{ issue }}</td>
   </tr>
   <tr>
-    <th>page</th>
+    <th>Volume</th>
+    <td>{{ vol }}</td>
+  </tr>
+  <tr>
+    <th>Page</th>
     <td>{{ page }}</td>
   </tr>
   <tr>
-    <th>pubdate</th>
+    <th>Publication date</th>
     <td>{{ pubdate }}</td>
   </tr>
   <tr>
-    <th>scp</th>
+    <th>Cited by</th>
+    <td>{{ citedbycount }}</td>
+  </tr>
+  <tr>
+    <th>DOI</th>
+    <td>{{ doi }}</td>
+  </tr>
+  <tr>
+    <th>EID</th>
+    <td>{{ eid }}</td>
+  </tr>
+  <tr>
+    <th>ISSN</th>
+    <td>{{ issn }}</td>
+  </tr>
+  <tr>
+    <th>SCP</th>
     <td>{{ scp }}</td>
   </tr>
   <tr>
-    <th>title</th>
-    <td>{{ title }}</td>
-  </tr>
-  <tr>
-    <th>vol</th>
-    <td>{{ vol }}</td>
+    <td></td>
+    <td><a href="{{ inwardurl }}" target="_blank">View on Scopus</a></td>
   </tr>
 </table>
