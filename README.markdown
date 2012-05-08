@@ -25,6 +25,10 @@ $ make
 
 This will output minified JavaScript into the build directory.
 
+## Changing how results are rendered
+
+Edit `app/templates/search_result.html` and rebuild.
+
 ## Recommended for development
 
 * [RVM](https://rvm.io//)

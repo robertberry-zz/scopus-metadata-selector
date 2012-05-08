@@ -52,6 +52,7 @@ require [
     submit.attr "disabled", yes
     selected.reset()
     results_container.html spinner
+    import_button.$el.hide()
   app.on "search:end", ->
     submit.attr "disabled", no
     results_container.html results.el
