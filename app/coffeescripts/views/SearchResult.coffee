@@ -21,6 +21,6 @@ define includes, (MustacheView, template) ->
     toggle: ->
       checkbox = @$(".select_result")
       event = if checkbox.is(':checked') then "select" else "deselect"
-      @trigger event, @
+      @trigger event, @model
 
   SearchResult

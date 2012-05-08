@@ -20,6 +20,7 @@ define includes, ($, _, Backbone) ->
         throw "Must be instantiated with collection."
       collection.bind "add", _.bind(@render, @)
       collection.bind "remove", _.bind(@render, @)
+      collection.bind "change", _.bind(@render, @)
       collection.bind "reset", _.bind(@render, @)
       @items = []
 
