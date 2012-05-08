@@ -8,3 +8,5 @@ define ->
     search_submit: "#sciverse_search_form input[type=submit]"
     results_div: "#sciverse"
     import_form: "#sciverse_submit_form"
+  # parameter name for the JSON field
+  parameter_name: "data"

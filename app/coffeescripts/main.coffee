@@ -19,8 +19,8 @@ require [
   "views/CountSubmit",
   "routers/SearchRouter",
   "text!templates/spinner.html"
-], ($, config, Renderer, Documents, SearchResults, \
-    JSONField, CountSubmit, SearchRouter, spinner) ->
+], ($, config, Renderer, Documents, SearchResults, JSONField, CountSubmit,
+  SearchRouter, spinner) ->
   sciverse.setApiKey config.api_key
 
   selectors = config.selectors
@@ -37,6 +37,7 @@ require [
   selected = new Documents()
   results = new SearchResults(collection: documents)
   selected_field = new JSONField(collection: selected)
+  selected_field.$el.attr "name", config.parameter_name
   selected_field.render()
   import_button = new CountSubmit
     collection: selected
