@@ -2,6 +2,9 @@
 
 install: build/images build/index.html build/stylesheets clean_javascript
 
+app/scripts: app/coffeescripts app/coffeescripts/config.coffee
+	coffee -o app/scripts -c app/coffeescripts
+
 clean_javascript: build/scripts/main.js
 	scripts/clean_build_scripts.sh
 
@@ -14,7 +17,7 @@ build/index.html: build
 build/stylesheets: build
 	cp -r app/stylesheets build/stylesheets
 
-build/scripts/main.js: app/coffeescripts/config.coffee
+build/scripts/main.js: app/scripts
 	r.js -o app.build.js
 
 build:
