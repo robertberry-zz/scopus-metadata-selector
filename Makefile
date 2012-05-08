@@ -26,5 +26,8 @@ build:
 app/coffeescripts/config.coffee: config.coffee
 	cp ./config.coffee ./app/coffeescripts/config.coffee
 
+test_server:
+	cd build && python -m SimpleHTTPServer 9999
+
 clean:
 	rm -Rf build

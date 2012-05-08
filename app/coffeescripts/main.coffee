@@ -42,7 +42,8 @@ require [
     collection: selected
     template: "Import (<%= count %>)"
     disable_on_zero: yes
-  import_button.render()
+  # hide import submit till results
+  import_button.$el.hide()
   import_form.append selected_field.el
   import_form.append import_button.el
 
@@ -54,6 +55,7 @@ require [
   app.on "search:end", ->
     submit.attr "disabled", no
     results_container.html results.el
+    import_button.$el.show()
 
   results.on "select", (document) ->
     selected.add document
