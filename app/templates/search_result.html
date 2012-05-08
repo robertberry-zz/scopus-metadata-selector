@@ -1,38 +1,5 @@
 <h3><label><input type="checkbox" class="select_result" /> {{ title }}</label></h3>
 
-<p>Issue {{ issue }}, vol. {{ vol }}, pp. {{ page }}.</p>
+<p>{{ sourcetitle }} issue {{ issue }}, vol. {{ vol }}, pp. {{ page }}.
+  {{ pubdate }}. <a href="{{ inwardurl }}" target="_blank">View on Scopus</a></p>
 
-<table>
-  <tr>
-    <th>Type</th>
-    <td>{{ doctype }}</td>
-  </tr>
-  <tr>
-    <th>Publication date</th>
-    <td>{{ pubdate }}</td>
-  </tr>
-  <tr>
-    <th>Cited by</th>
-    <td>{{ citedbycount }}</td>
-  </tr>
-  <tr>
-    <th>DOI</th>
-    <td>{{ doi }}</td>
-  </tr>
-  <tr>
-    <th>EID</th>
-    <td>{{ eid }}</td>
-  </tr>
-  <tr>
-    <th>ISSN</th>
-    <td>{{ issn }}</td>
-  </tr>
-  <tr>
-    <th>SCP</th>
-    <td>{{ scp }}</td>
-  </tr>
-  <tr>
-    <td></td>
-    <td><a href="{{ inwardurl }}" target="_blank">View on Scopus</a></td>
-  </tr>
-</table>

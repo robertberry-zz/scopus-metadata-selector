@@ -1,12 +1,10 @@
 # Search router
 
-includes = [
+define [
   "jquery",
   "underscore",
   "backbone"
-]
-
-define includes, ($, _, Backbone) ->
+], ($, _, Backbone) ->
   # Routes for querying Scopus database
   class SearchRouter extends Backbone.Router
     routes:

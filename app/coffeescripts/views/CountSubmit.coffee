@@ -1,11 +1,9 @@
 
-includes = [
+define [
   "jquery",
   "underscore",
   "backbone"
-]
-
-define includes, ($, _, Backbone) ->
+], ($, _, Backbone) ->
   class CountSubmit extends Backbone.View
     tagName: "input"
 

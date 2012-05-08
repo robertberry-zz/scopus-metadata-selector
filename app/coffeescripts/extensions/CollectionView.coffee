@@ -1,12 +1,10 @@
 # CollectionView extension
 
-includes = [
+define [
   "jquery",
   "underscore",
   "backbone"
-]
-
-define includes, ($, _, Backbone) ->
+], ($, _, Backbone) ->
   # For working with a view that represents a list of subviews based on a
   # collection. Specify the sub view class in the 'item_view' class property.
   # When the collection changes, the view will automatically re-render the

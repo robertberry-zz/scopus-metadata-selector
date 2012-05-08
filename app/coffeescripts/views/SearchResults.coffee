@@ -1,11 +1,9 @@
 # A view that renders search results
 
-includes = [
+define [
   "extensions/CollectionView",
   "views/SearchResult"
-]
-
-define includes, (CollectionView, SearchResult) ->
+], (CollectionView, SearchResult) ->
   class SearchResults extends CollectionView
     item_view: SearchResult
 

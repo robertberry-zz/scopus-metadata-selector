@@ -1,9 +1,6 @@
 # Custom Renderer for the Sciverse search API
 
-includes = [
-]
-
-define includes, ->
+define ->
   class Renderer
     # Constructs a Renderer with the given reference to a Documents
     # instance. This collection will be updated by the Renderer when searches

@@ -1,10 +1,8 @@
 # Utility functions relating to objects
 
-includes = [
+define [
   "underscore"
-]
-
-define includes, (_) ->
+], (_) ->
   exports = {}
 
   # Returns a hash containing all of the object's methods, bound to the object

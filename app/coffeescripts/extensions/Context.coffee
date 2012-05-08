@@ -1,11 +1,9 @@
 # Context class
 
-includes = [
+define [
   "underscore",
   "utils/object"
-]
-
-define includes, (_, object) ->
+], (_, object) ->
   # Context for use in a Mustache view. Given the view and the model, attaches
   # the methods to the context and the model attributes, allowing convenient
   # access to all.

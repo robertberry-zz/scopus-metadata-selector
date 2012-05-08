@@ -1,17 +1,15 @@
 # MustacheView extension
 
-includes = [
+# Note: Mustache is not a fully AMD-compliant module, which is why it's not
+# included in the parameter list below.
+
+define [
   "jquery",
   "underscore",
   "backbone",
   "extensions/Context",
   "Mustache"
-]
-
-# Note: Mustache is not a fully AMD-compliant module, which is why it's not
-# included in the parameter list below.
-
-define includes, ($, _, Backbone, Context) ->
+], ($, _, Backbone, Context) ->
   # View extension that renders using a Mustache template, which should be
   # specified in the view's 'template' property. Passes the model directly to
   # the view. If the view wraps a collection, passes the collection's models

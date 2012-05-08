@@ -1,9 +1,7 @@
-includes = [
+define [
   "extensions/MustacheView",
   "text!templates/search_result.html"
-]
-
-define includes, (MustacheView, template) ->
+], (MustacheView, template) ->
   class SearchResult extends MustacheView
     tagName: "div"
 

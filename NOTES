@@ -2,3 +2,5 @@
 
 Be careful with constructors. Normal CoffeeScript classes should have their constructor
 as the 'constructor' property. Classes that extend Backbone classes should use 'initalize'.
+
+Some of the naming should be cleaned up in main.coffee. It's a little confusing.

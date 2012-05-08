@@ -9,9 +9,15 @@ require.config
     Mustache: "libs/mustache/mustache"
     templates: "../templates"
 
-includes = [
+FORM_SELECTOR = "#sciverse_search_form"
+SEARCH_INPUT_SELECTOR = "input[name=sciverse_search_string]"
+SUBMIT_BUTTON_SELECTOR = "input[type=submit]"
+RESULTS_SELECTOR = "#sciverse"
+IMPORT_FORM = "#sciverse_submit_form"
+
+require [
   "jquery",
-  "text!../api_key",
+  "config"
   "Renderer",
   "collections/Documents",
   "views/SearchResults",
@@ -19,17 +25,9 @@ includes = [
   "views/CountSubmit",
   "routers/SearchRouter",
   "text!templates/spinner.html"
-]
-
-FORM_SELECTOR = "#sciverse_search_form"
-SEARCH_INPUT_SELECTOR = "input[name=sciverse_search_string]"
-SUBMIT_BUTTON_SELECTOR = "input[type=submit]"
-RESULTS_SELECTOR = "#sciverse"
-IMPORT_FORM = "#sciverse_submit_form"
-
-require includes, ($, api_key, Renderer, Documents, SearchResults, \
+], ($, config, Renderer, Documents, SearchResults, \
     JSONField, CountSubmit, SearchRouter, spinner) ->
-  sciverse.setApiKey api_key
+  sciverse.setApiKey config.api_key
 
   form = $(FORM_SELECTOR)
   query = $(SEARCH_INPUT_SELECTOR)
