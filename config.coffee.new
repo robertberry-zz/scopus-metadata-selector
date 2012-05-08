@@ -1,3 +1,10 @@
 define ->
   # put your config variables here
   api_key: "your api key here"
+  # css selectors for the elements that will be used by the script
+  selectors:
+    search_form: "#sciverse_search_form"
+    search_input: "#sciverse_search_form input[name=sciverse_search_string]"
+    search_submit: "#sciverse_search_form input[type=submit]"
+    results_div: "#sciverse"
+    import_form: "#sciverse_submit_form"

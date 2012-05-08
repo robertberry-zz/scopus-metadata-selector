@@ -9,12 +9,6 @@ require.config
     Mustache: "libs/mustache/mustache"
     templates: "../templates"
 
-FORM_SELECTOR = "#sciverse_search_form"
-SEARCH_INPUT_SELECTOR = "input[name=sciverse_search_string]"
-SUBMIT_BUTTON_SELECTOR = "input[type=submit]"
-RESULTS_SELECTOR = "#sciverse"
-IMPORT_FORM = "#sciverse_submit_form"
-
 require [
   "jquery",
   "config"
@@ -29,11 +23,13 @@ require [
     JSONField, CountSubmit, SearchRouter, spinner) ->
   sciverse.setApiKey config.api_key
 
-  form = $(FORM_SELECTOR)
-  query = $(SEARCH_INPUT_SELECTOR)
-  submit = $(SUBMIT_BUTTON_SELECTOR)
-  import_form = $(IMPORT_FORM)
-  results_container = $(RESULTS_SELECTOR)
+  selectors = config.selectors
+
+  form = $(selectors.search_form)
+  query = $(selectors.search_input)
+  submit = $(selectors.search_submit)
+  import_form = $(selectors.import_form)
+  results_container = $(selectors.results_container)
 
   app = new SearchRouter()
 
@@ -46,6 +42,7 @@ require [
     collection: selected
     template: "Import (<%= count %>)"
     disable_on_zero: yes
+  import_button.render()
   import_form.append selected_field.el
   import_form.append import_button.el
 
@@ -71,4 +68,3 @@ require [
     app.navigate("search/" + query.val(), trigger: yes)
 
   Backbone.history.start pushState: no
-
