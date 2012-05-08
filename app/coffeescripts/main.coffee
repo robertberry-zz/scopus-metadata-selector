@@ -16,6 +16,7 @@ includes = [
   "collections/Documents",
   "views/SearchResults",
   "views/JSONField",
+  "views/CountSubmit",
   "routers/SearchRouter",
   "text!templates/spinner.html"
 ]
@@ -24,16 +25,16 @@ FORM_SELECTOR = "#sciverse_search_form"
 SEARCH_INPUT_SELECTOR = "input[name=sciverse_search_string]"
 SUBMIT_BUTTON_SELECTOR = "input[type=submit]"
 RESULTS_SELECTOR = "#sciverse"
-IMPORT_SELECTOR = "#sciverse_submit_form input[type=submit]"
+IMPORT_FORM = "#sciverse_submit_form"
 
 require includes, ($, api_key, Renderer, Documents, SearchResults, \
-    JSONField, SearchRouter, spinner) ->
+    JSONField, CountSubmit, SearchRouter, spinner) ->
   sciverse.setApiKey api_key
 
   form = $(FORM_SELECTOR)
   query = $(SEARCH_INPUT_SELECTOR)
   submit = $(SUBMIT_BUTTON_SELECTOR)
-  import_button = $(IMPORT_SELECTOR)
+  import_form = $(IMPORT_FORM)
   results_container = $(RESULTS_SELECTOR)
 
   app = new SearchRouter()
@@ -43,7 +44,12 @@ require includes, ($, api_key, Renderer, Documents, SearchResults, \
   results = new SearchResults(collection: documents)
   selected_field = new JSONField(collection: selected)
   selected_field.render()
-  import_button.before selected_field.el
+  import_button = new CountSubmit
+    collection: selected
+    template: "Import (<%= count %>)"
+    disable_on_zero: yes
+  import_form.append selected_field.el
+  import_form.append import_button.el
 
   app.on "search:start", (search_string) ->
     query.val search_string
