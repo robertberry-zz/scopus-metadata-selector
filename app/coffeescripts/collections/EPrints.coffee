@@ -6,40 +6,14 @@ define [
   "backbone",
   "models/EPrint"
   "utils/collection",
-  "utils/object",
-], ($, _, Backbone, EPrint, collection, object) ->
+  "utils/object/transformations",
+], ($, _, Backbone, EPrint, collection, transformations) ->
   class EPrints extends Backbone.Collection
     # attributes:
     #   date, title, issn ... not sure what else yet
     model: EPrint
 
-  # todo - maybe make an object/transformations library for these functions
-  # so I don't have to do all this ugly renaming!
-  renames = object.renames_attribute
-  strips = object.strips_attribute
-  transforms = object.transforms_attribute
-  composes = object.composes_attribute
-  sets = object.sets_attribute
-
-  # Given an attribute name, a regular expression, and a list of new
-  # attributes, returns a function that matches the attribute in an object
-  # against the regular expression, then sets the new attributes from the
-  # match groups. Phew!
-  sets_from = (attribute, re, new_attributes...) ->
-    (attrs) ->
-      if attrs[attribute]
-        matches = attrs[attribute].match re
-        matches.shift() # remove whole match
-        for [key, val] in _.zip(new_attributes, matches)
-          attrs[key] = val
-      attrs
-
-  # Same as above, but deletes the original attribute
-  extracts = (attribute, re, new_attributes...) ->
-    _.compose(
-      strips(attribute)
-      sets_from.apply(sets_from, [attribute, re].concat(new_attributes)),
-    )
+  {renames, strips, transforms, composes, sets, maps} = transformations
 
   get_name_components = (name) ->
     re = ///
@@ -49,12 +23,6 @@ define [
     ///
     matches = name.match re
     return family: matches[1], given: matches[2], lineage: matches[3]
-
-  maps = (attribute, map) ->
-    (attrs) ->
-      if map[attrs[attribute]]
-        attrs[attribute] = map[attrs[attribute]]
-      attrs
 
   list_authors = _.compose(((x) -> [name: x]), get_name_components)
 
