@@ -3,8 +3,9 @@
 define [
   "jquery",
   "underscore",
-  "backbone"
-], ($, _, Backbone) ->
+  "backbone",
+  "utils/utf8"
+], ($, _, Backbone, utf8) ->
   class JSONField extends Backbone.View
     tagName: "input"
 
@@ -21,6 +22,9 @@ define [
         @model.bind "change", _.bind(@render, @)
 
     render: ->
-      @$el.val JSON.stringify(@model || @collection)
+      json = JSON.stringify(@model || @collection)
+      if @options["utf8"]
+        json = utf8.encode json
+      @$el.val json
 
   JSONField

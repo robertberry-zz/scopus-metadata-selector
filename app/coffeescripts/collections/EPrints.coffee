@@ -6,7 +6,7 @@ define [
   "backbone",
   "models/EPrint"
   "utils/collection",
-  "utils/object"
+  "utils/object",
 ], ($, _, Backbone, EPrint, collection, object) ->
   class EPrints extends Backbone.Collection
     # attributes:
@@ -56,7 +56,7 @@ define [
         attrs[attribute] = map[attrs[attribute]]
       attrs
 
-  list_authors = _.compose(((x) -> [name: x]), get_name_components))
+  list_authors = _.compose(((x) -> [name: x]), get_name_components)
 
   # Function for producing an EPrints collection that automatically mirrors a
   # Scopus Documents collection. Whenever the Scopus collection changes, this

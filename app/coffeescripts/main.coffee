@@ -39,7 +39,7 @@ require [
   selected_eprints = EPrints.mirroring_documents(selected_results)
   results = new SearchResults(collection: search_results)
 
-  import_input = new JSONField(collection: selected_eprints)
+  import_input = new JSONField(collection: selected_eprints, utf8: yes)
   import_input.$el.attr "name", config.parameter_name
   import_input.render()
   import_button = new CountSubmit
