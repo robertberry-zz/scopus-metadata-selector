@@ -26,4 +26,17 @@ define [
       delete attrs[attribute]
       attrs
 
+  # Returns a function that given an object, performs the transformation on
+  # the attribute
+  exports.transforms_attribute = (attribute, f) ->
+    (attrs) ->
+      attrs[attribute] = f(attrs[attribute])
+      attrs
+
+  # Composes a new attribute in the object given the other attributes using an
+  # Underscore.js template
+  exports.composes_attribute = (attribute, template) ->
+    (attrs) ->
+      attrs[attribute] = _.template(template, attrs)
+
   exports
