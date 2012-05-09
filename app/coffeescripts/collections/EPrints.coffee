@@ -22,7 +22,10 @@ define [
       (.*)?          # optional middle name
     ///
     matches = name.match re
-    return family: matches[1], given: matches[2], lineage: matches[3]
+    if matches
+      return family: matches[1], given: matches[2], lineage: matches[3]
+    else
+      return family: name
 
   list_authors = _.compose(((x) -> [name: x]), get_name_components)
 
