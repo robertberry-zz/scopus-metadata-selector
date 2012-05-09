@@ -14,12 +14,13 @@ require [
   "config"
   "Renderer",
   "collections/Documents",
+  "collections/EPrints",
   "views/SearchResults",
   "views/JSONField",
   "views/CountSubmit",
   "routers/SearchRouter",
   "text!templates/spinner.html",
-], ($, config, Renderer, Documents, SearchResults, JSONField, CountSubmit, \
+], ($, config, Renderer, Documents, EPrints, SearchResults, JSONField, CountSubmit, \
     SearchRouter, spinner, collection, object) ->
   sciverse.setApiKey config.api_key
 
@@ -35,9 +36,10 @@ require [
 
   search_results = new Documents()
   selected_results = new Documents()
+  selected_eprints = EPrints.mirroring_documents(selected_results)
   results = new SearchResults(collection: search_results)
 
-  import_input = new JSONField(collection: selected_results)
+  import_input = new JSONField(collection: selected_eprints)
   import_input.$el.attr "name", config.parameter_name
   import_input.render()
   import_button = new CountSubmit
