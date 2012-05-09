@@ -18,57 +18,58 @@ require [
   "views/JSONField",
   "views/CountSubmit",
   "routers/SearchRouter",
-  "text!templates/spinner.html"
-], ($, config, Renderer, Documents, SearchResults, JSONField, CountSubmit,
-  SearchRouter, spinner) ->
+  "text!templates/spinner.html",
+], ($, config, Renderer, Documents, SearchResults, JSONField, CountSubmit, \
+    SearchRouter, spinner, collection, object) ->
   sciverse.setApiKey config.api_key
 
   selectors = config.selectors
 
-  form = $(selectors.search_form)
-  query = $(selectors.search_input)
-  submit = $(selectors.search_submit)
+  search_form = $(selectors.search_form)
+  search_input = $(selectors.search_input)
+  search_submit = $(selectors.search_submit)
   import_form = $(selectors.import_form)
   results_container = $(selectors.results_container)
 
   app = new SearchRouter()
 
-  documents = new Documents()
-  selected = new Documents()
-  results = new SearchResults(collection: documents)
-  selected_field = new JSONField(collection: selected)
-  selected_field.$el.attr "name", config.parameter_name
-  selected_field.render()
+  search_results = new Documents()
+  selected_results = new Documents()
+  results = new SearchResults(collection: search_results)
+
+  import_input = new JSONField(collection: selected_results)
+  import_input.$el.attr "name", config.parameter_name
+  import_input.render()
   import_button = new CountSubmit
-    collection: selected
+    collection: selected_results
     template: "Import (<%= count %>)"
     disable_on_zero: yes
   # hide import submit till results
   import_button.$el.hide()
-  import_form.append selected_field.el
+  import_form.append import_input.el
   import_form.append import_button.el
 
   app.on "search:start", (search_string) ->
-    query.val search_string
-    submit.attr "disabled", yes
-    selected.reset()
+    search_input.val search_string
+    search_submit.attr "disabled", yes
+    selected_results.reset()
     results_container.html spinner
     import_button.$el.hide()
   app.on "search:end", ->
-    submit.attr "disabled", no
+    search_submit.attr "disabled", no
     results_container.html results.el
     import_button.$el.show()
 
   results.on "select", (document) ->
-    selected.add document
+    selected_results.add document
   results.on "deselect", (document) ->
-    selected.remove document
+    selected_results.remove document
 
-  renderer = new Renderer(documents)
+  renderer = new Renderer(search_results)
   sciverse.setRenderer renderer
 
-  form.submit (event) ->
+  search_form.submit (event) ->
     event.preventDefault()
-    app.navigate("search/" + query.val(), trigger: yes)
+    app.navigate("search/" + search_input.val(), trigger: yes)
 
   Backbone.history.start pushState: no
