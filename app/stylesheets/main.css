@@ -3,6 +3,11 @@ div.search_result {
     margin-bottom: 1em;
 }
 
+div.scopus_error {
+    background-color: #c66;
+    padding: 1em;
+}
+
 div.search_result table th {
     text-align: left;
     padding-right: 2em;

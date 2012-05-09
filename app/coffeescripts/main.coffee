@@ -15,13 +15,16 @@ require [
   "Renderer",
   "collections/Documents",
   "collections/EPrints",
+  "collections/Warnings",
+  "collections/Errors",
   "views/SearchResults",
   "views/JSONField",
   "views/CountSubmit",
+  "views/ErrorMessages",
   "routers/SearchRouter",
   "text!templates/spinner.html",
-], ($, config, Renderer, Documents, EPrints, SearchResults, JSONField, CountSubmit, \
-    SearchRouter, spinner, collection, object) ->
+], ($, config, Renderer, Documents, EPrints, Warnings, Errors, SearchResults, \
+    JSONField, CountSubmit, ErrorMessages, SearchRouter, spinner) ->
   sciverse.setApiKey config.api_key
 
   selectors = config.selectors
@@ -67,7 +70,12 @@ require [
   results.on "deselect", (document) ->
     selected_results.remove document
 
-  renderer = new Renderer(search_results)
+  warnings = new Warnings()
+  errors = new Errors()
+  error_messages = new ErrorMessages(collection: errors)
+  search_form.after error_messages.el
+
+  renderer = new Renderer(search_results, warnings, errors)
   sciverse.setRenderer renderer
 
   search_form.submit (event) ->

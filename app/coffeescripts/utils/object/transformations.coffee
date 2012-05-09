@@ -1,4 +1,4 @@
-# Functions for performing transformations to objects
+# Functions for performing transformations on objects
 
 define [
   "underscore"
