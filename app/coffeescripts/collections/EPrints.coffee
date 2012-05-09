@@ -50,6 +50,14 @@ define [
     matches = name.match re
     return family: matches[1], given: matches[2], lineage: matches[3]
 
+  maps = (attribute, map) ->
+    (attrs) ->
+      if map[attrs[attribute]]
+        attrs[attribute] = map[attrs[attribute]]
+      attrs
+
+  list_authors = _.compose(((x) -> [name: x]), get_name_components))
+
   # Function for producing an EPrints collection that automatically mirrors a
   # Scopus Documents collection. Whenever the Scopus collection changes, this
   # one will automatically update to reflect those changes.
@@ -58,20 +66,23 @@ define [
     collection.map documents, prints, _.compose(
       renames("pubdate", "date"),
       sets("date_type", "published"),
-      renames("sourcetitle", "publication"),
+      sets("ispublished", "pub"),    # If it's on Elsevier assume published
+      sets("refereed", "TRUE"),      # assume refereed too???
+      renames("sourcetitle", "publication"),  # should be book_title in books ...
       renames("vol", "volume"),
       renames("inwardurl", "official_url"),
+      maps("type", Journal: "article", Book: "book"),
       renames("doctype", "type"),
       renames("issue", "number"),
       renames("doi", "id_number"),
       renames("abs", "abstract"),
-      extracts("page", /(\d+)-(\d+)/, "pagerange_from", "pagerange_to"),
+      renames("page", "pagerange"),
       sets("publisher", "Elsevier"),
       renames("firstauth", "creators"),
-      transforms("firstauth", _.compose(((x) -> [x]), get_name_components)),
-      strips("authlist"),
-      strips("eid"),
-      strips("scp"),
+      transforms("firstauth", list_authors),
+      strips("authlist"),   # could we concat this to firstauth?
+      strips("eid"),       # Scopus Unique Article identifier
+      strips("scp"),       # Not sure what this is? Another Scopus ID?
       strips("citedbycount"),  # leave this to be calculated by a dedicated
                                # plug in
       strips("affiliation"),   # always us
