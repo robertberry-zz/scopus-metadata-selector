@@ -1,5 +1,12 @@
 <h3><label><input type="checkbox" class="select_result" /> {{ title }}</label></h3>
 
-<p>{{ sourcetitle }} issue {{ issue }}, vol. {{ vol }}, pp. {{ page }}.
-  {{ pubdate }}. <a href="{{ inwardurl }}" target="_blank">View on Scopus</a></p>
+<table>
+  <tr>
+    <td width="150" valign="top">{{ firstauth }}</td>
+    <td width="550" valign="top">{{ sourcetitle }}<br />
+      Issue {{ issue }}, vol. {{ vol }}, pp. {{ page }}.</td>
+    <td width="100" valign="top">{{ pubdate }}</td>
+    <td valign="top"><a href="{{ inwardurl }}" target="_blank">View on Scopus</a></td>
+  </tr>
+</table>
 
