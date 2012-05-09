@@ -26,6 +26,12 @@ define [
       delete attrs[attribute]
       attrs
 
+  # Returns a function that given an object, sets an attribute
+  exports.sets_attribute = (attribute, value) ->
+    (attrs) ->
+      attrs[attribute] = value
+      attrs
+
   # Returns a function that given an object, performs the transformation on
   # the attribute
   exports.transforms_attribute = (attribute, f) ->
