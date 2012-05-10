@@ -62,4 +62,12 @@ define [
         attrs[attribute] = map[attrs[attribute]]
       attrs
 
+  # Returns a transformation that merges two fields into one using the given
+  # merge function
+  exports.merges = (x, y, merge) ->
+    (attrs) ->
+      attrs[x] = merge(attrs[x], attrs[y])
+      delete attrs[y]
+      attrs
+
   exports

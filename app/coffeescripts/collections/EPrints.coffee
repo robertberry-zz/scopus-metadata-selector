@@ -7,15 +7,18 @@ define [
   "models/EPrint"
   "utils/collection",
   "utils/object/transformations",
-], ($, _, Backbone, EPrint, collection, transformations) ->
+  "utils/list/transformations",
+  "utils/string/transformations"
+], ($, _, Backbone, EPrint, collection, object_transformations, \
+    list_transformations, string_transformations) ->
   class EPrints extends Backbone.Collection
     # attributes:
     #   date, title, issn ... not sure what else yet
     model: EPrint
 
-  {renames, strips, transforms, composes, sets, maps} = transformations
-
   get_name_components = (name) ->
+    if not name
+      return null
     re = ///
       ([^,]+),\s*    # surname
       ([^\s]+)\s*    # first name
@@ -27,7 +30,18 @@ define [
     else
       return family: name
 
-  list_authors = _.compose(((x) -> [name: x]), get_name_components)
+  {maps, rejects} = list_transformations
+  {splits} = string_transformations
+
+  make_author_json = _.compose(
+    maps(_.compose(((x) -> name: x), get_name_components)),
+    rejects((x) -> x == ""), # if the author is an empty string to begin with
+                             # split will return an array containing one empty
+                             # string. this removes it.
+    splits(/\s*;\s*/)
+  )
+
+  {renames, strips, transforms, composes, sets, maps, merges} = object_transformations
 
   # Function for producing an EPrints collection that automatically mirrors a
   # Scopus Documents collection. Whenever the Scopus collection changes, this
@@ -49,9 +63,10 @@ define [
       renames("abs", "abstract"),
       renames("page", "pagerange"),
       sets("publisher", "Elsevier"),
+      merges("creators", "authlist", _.union),
       renames("firstauth", "creators"),
-      transforms("firstauth", list_authors),
-      strips("authlist"),   # could we concat this to firstauth?
+      transforms("firstauth", make_author_json),
+      transforms("authlist", make_author_json),
       strips("eid"),       # Scopus Unique Article identifier
       strips("scp"),       # Not sure what this is? Another Scopus ID?
       strips("citedbycount"),  # leave this to be calculated by a dedicated
