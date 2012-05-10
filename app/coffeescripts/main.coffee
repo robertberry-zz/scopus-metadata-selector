@@ -11,6 +11,7 @@ require.config
 
 require [
   "jquery",
+  "sciverse",
   "config"
   "Renderer",
   "collections/Documents",
@@ -23,9 +24,10 @@ require [
   "views/ErrorMessages",
   "routers/SearchRouter",
   "text!templates/spinner.html",
-], ($, config, Renderer, Documents, EPrints, Warnings, Errors, SearchResults, \
+], ($, sciverse, config, Renderer, Documents, EPrints, Warnings, Errors, SearchResults, \
     JSONField, CountSubmit, ErrorMessages, SearchRouter, spinner) ->
-  sciverse.setApiKey config.api_key
+  api = new sciverse.API(config.api_key)
+  app = new SearchRouter(sciverse: api)
 
   selectors = config.selectors
 
@@ -34,8 +36,6 @@ require [
   search_submit = $(selectors.search_submit)
   import_form = $(selectors.import_form)
   results_container = $(selectors.results_container)
-
-  app = new SearchRouter()
 
   search_results = new Documents()
   selected_results = new Documents()
@@ -54,29 +54,33 @@ require [
   import_form.append import_input.el
   import_form.append import_button.el
 
-  app.on "search:start", (search_string) ->
-    search_input.val search_string
+  errors = new Errors()
+  error_messages = new ErrorMessages(collection: errors)
+  search_form.after error_messages.el
+
+  app.on "search", (search) ->
+    search_input.val search.query
     search_submit.attr "disabled", yes
     selected_results.reset()
     results_container.html spinner
     import_button.$el.hide()
-  app.on "search:end", ->
-    search_submit.attr "disabled", no
-    results_container.html results.el
-    import_button.$el.show()
+    search.on "results", (data) ->
+      search_submit.attr "disabled", no
+      results_container.html results.el
+      import_button.$el.show()
+      search_results.reset data['results']
+      errors.reset []
+    search.on "errors", (errors) ->
+      search_results.reset []
+      errors.reset errors
+
+  app.on "search:end", (info) ->
+    console.debug info
 
   results.on "select", (document) ->
     selected_results.add document
   results.on "deselect", (document) ->
     selected_results.remove document
-
-  warnings = new Warnings()
-  errors = new Errors()
-  error_messages = new ErrorMessages(collection: errors)
-  search_form.after error_messages.el
-
-  renderer = new Renderer(search_results, warnings, errors)
-  sciverse.setRenderer renderer
 
   search_form.submit (event) ->
     event.preventDefault()
