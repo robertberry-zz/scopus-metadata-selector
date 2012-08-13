@@ -77,12 +77,12 @@ require [
       search_submit.attr "disabled", no
       results_container.html results.el
       import_button.$el.show()
+      errors.reset []
 
     search.on "errors", (errs) ->
       search_submit.attr "disabled", no
       results_container.html ""
       errors.reset {error_message: err} for err in errs
-      console.debug errors
 
   results.on "select", (document) ->
     selected_results.add document
