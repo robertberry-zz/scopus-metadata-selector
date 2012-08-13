@@ -4,9 +4,9 @@ define [
   "jquery",
   "underscore",
   "backbone",
-  "models/Error"
-], ($, _, Backbone, Error) ->
+  "models/SearchError"
+], ($, _, Backbone, SearchError) ->
   class Errors extends Backbone.Collection
-    model: Error
+    model: SearchError
 
   Errors

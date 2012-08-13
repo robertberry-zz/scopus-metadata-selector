@@ -1,4 +1,4 @@
-
+# SciVerse API abstraction
 
 define [
   "jquery",
@@ -47,14 +47,15 @@ define [
         @searchObj.setSearch @query
         @searchObj.setSort @sort
         @searchObj.setSortDirection @order
-        sciverse.setErrorCallback (errors) =>
-          @_errors errors
+        @searchObj.setOffset(@per_page * n)
         sciverse.setCallback =>
           if sciverse.areSearchResultsValid()
             @total_results = sciverse.getTotalHits()
             results = sciverse.getSearchResults()
             results["page"] = n
             @_results results
+        sciverse.setErrorCallback =>
+            @_errors sciverse._errors
         sciverse.runSearch @searchObj
 
     _results: (results) ->

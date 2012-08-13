@@ -24,8 +24,10 @@ require [
   "views/ErrorMessages",
   "routers/SearchRouter",
   "text!templates/spinner.html",
+  "controllers/StaggeredSearch"
 ], ($, sciverse, config, Renderer, Documents, EPrints, Warnings, Errors, SearchResults, \
-    JSONField, CountSubmit, ErrorMessages, SearchRouter, spinner) ->
+    JSONField, CountSubmit, ErrorMessages, SearchRouter, spinner, \
+    StaggeredSearch) ->
   api = new sciverse.API(config.api_key)
   app = new SearchRouter(sciverse: api)
 
@@ -58,24 +60,29 @@ require [
   error_messages = new ErrorMessages(collection: errors)
   search_form.after error_messages.el
 
+  current_search = null
+
   app.on "search", (search) ->
+    current_search = new StaggeredSearch(search_results, search)
+    current_search.next()
+    search_results.reset()
+    selected_results.reset()
+
     search_input.val search.query
     search_submit.attr "disabled", yes
-    selected_results.reset()
     results_container.html spinner
     import_button.$el.hide()
+
     search.on "results", (data) ->
       search_submit.attr "disabled", no
       results_container.html results.el
       import_button.$el.show()
-      search_results.reset data['results']
-      errors.reset []
-    search.on "errors", (errors) ->
-      search_results.reset []
-      errors.reset errors
 
-  app.on "search:end", (info) ->
-    console.debug info
+    search.on "errors", (errs) ->
+      search_submit.attr "disabled", no
+      results_container.html ""
+      errors.reset {error_message: err} for err in errs
+      console.debug errors
 
   results.on "select", (document) ->
     selected_results.add document

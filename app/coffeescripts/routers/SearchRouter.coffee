@@ -26,5 +26,3 @@ define [
         per_page: config.results_per_page
         query: @filter_query(query)
       @trigger "search", search
-
-      search.fetch_page 0

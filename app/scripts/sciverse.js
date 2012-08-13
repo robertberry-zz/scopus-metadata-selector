@@ -69,9 +69,7 @@
           this.searchObj.setSearch(this.query);
           this.searchObj.setSort(this.sort);
           this.searchObj.setSortDirection(this.order);
-          sciverse.setErrorCallback(function(errors) {
-            return _this._errors(errors);
-          });
+          this.searchObj.setOffset(this.per_page * n);
           sciverse.setCallback(function() {
             var results;
             if (sciverse.areSearchResultsValid()) {
@@ -80,6 +78,9 @@
               results["page"] = n;
               return _this._results(results);
             }
+          });
+          sciverse.setErrorCallback(function() {
+            return _this._errors(sciverse._errors);
           });
           return sciverse.runSearch(this.searchObj);
         }
