@@ -3,7 +3,7 @@ define [
   "extensions/MustacheView",
   "text!templates/more_results.html"
 ], (MustacheView, template) ->
-  class MoreResults extends Backbone.View
+  class MoreResults extends MustacheView
     tagName: "div"
 
     events:
@@ -27,7 +27,8 @@ define [
     more: ->
       @search.how_many_more()
 
-    on_click: ->
+    on_click: (event) ->
+      event.preventDefault()
       @search.next()
       @$el.hide()
 

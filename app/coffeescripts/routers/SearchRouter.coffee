@@ -13,7 +13,6 @@ define [
       "search/:query": "search"
 
     initialize: (@options) ->
-      console.debug @options
 
     filter_query: (query) ->
       # Get rid of any chars that are not letters, spaces or digits

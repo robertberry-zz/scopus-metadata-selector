@@ -24,10 +24,11 @@ require [
   "views/ErrorMessages",
   "routers/SearchRouter",
   "text!templates/spinner.html",
-  "controllers/StaggeredSearch"
+  "controllers/StaggeredSearch",
+  "views/MoreResults"
 ], ($, sciverse, config, Renderer, Documents, EPrints, Warnings, Errors, SearchResults, \
     JSONField, CountSubmit, ErrorMessages, SearchRouter, spinner, \
-    StaggeredSearch) ->
+    StaggeredSearch, MoreResults) ->
   api = new sciverse.API(config.api_key)
   app = new SearchRouter(sciverse: api)
 
@@ -63,7 +64,13 @@ require [
   current_search = null
 
   app.on "search", (search) ->
+    MORE = $("#sciverse_more")
+  
     current_search = new StaggeredSearch(search_results, search)
+    search_more = new MoreResults(staggered_search: current_search)
+
+    MORE.html(search_more.el)
+  
     current_search.next()
     search_results.reset()
     selected_results.reset()

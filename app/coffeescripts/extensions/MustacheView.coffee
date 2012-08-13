@@ -22,7 +22,7 @@ define [
       else if @collection
         context = {collection: new Context(@, model) for model in @collection.models}
       else
-        context = {}
+        context = new Context(@)
       @$el.html Mustache.render(@template, context)
 
   MustacheView

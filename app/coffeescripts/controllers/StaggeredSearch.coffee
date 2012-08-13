@@ -16,6 +16,6 @@ define ->
 
     # Returns how many more results are left to load
     how_many_more: ->
-      @search.total_results - (@search.per_page * @page + 1)
+      parseInt(@search.total_results) - (@search.per_page * @page + 1)
 
   StaggeredSearch

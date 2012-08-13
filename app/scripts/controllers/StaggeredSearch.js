@@ -25,7 +25,7 @@
       };
 
       StaggeredSearch.prototype.how_many_more = function() {
-        return this.search.total_results - (this.search.per_page * this.page + 1);
+        return parseInt(this.search.total_results) - (this.search.per_page * this.page + 1);
       };
 
       return StaggeredSearch;

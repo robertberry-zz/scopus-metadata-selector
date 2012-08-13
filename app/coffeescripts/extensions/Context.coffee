@@ -8,7 +8,8 @@ define [
   # the methods to the context and the model attributes, allowing convenient
   # access to all.
   class Context
-    constructor: (view, model) ->
+    constructor: (view, model=undefined) ->
       _.extend @, object.methods(view)
-      _.extend @, object.methods(model)
-      _.extend @, model.attributes
+      if model
+        _.extend @, object.methods(model) 
+        _.extend @, model.attributes
