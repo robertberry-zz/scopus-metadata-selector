@@ -103,7 +103,7 @@ require [
 
     search.on "errors", (errs) ->
       search_submit.attr "disabled", no
-      results_container.html ""
+      results_container.hide()
       errors.reset {error_message: err} for err in errs
 
   results.on "select", (document) ->

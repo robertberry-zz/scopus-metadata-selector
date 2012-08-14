@@ -29,8 +29,10 @@ define [
 
     # Repopulate with sub views for the given set of models. Should only be
     # invoked by the collection's event handler.
-    _reset: (models) ->
+    _reset: (collection) ->
       @_remove_sub_views(@items)
+      collection.each (model) =>
+        @_add model
 
     # Remove the given sub views
     _remove_sub_views: (sub_views) ->
