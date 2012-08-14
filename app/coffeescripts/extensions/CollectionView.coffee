@@ -25,12 +25,12 @@ define [
 
     render: ->
       @trigger "refresh", @items
+      @_render_sub_views(@items)
 
     # Repopulate with sub views for the given set of models. Should only be
     # invoked by the collection's event handler.
     _reset: (models) ->
       @_remove_sub_views(@items)
-      #@_add models
 
     # Remove the given sub views
     _remove_sub_views: (sub_views) ->
@@ -48,19 +48,17 @@ define [
     # invoked by the event handler for the collection.
     _add: (model) ->
       sub_view = new @item_view model: model
-      @_append_sub_views([sub_view])
-      @_add_event_forwarding([sub_view])
+      @_append_sub_view(sub_view)
+      @_add_event_forwarding(sub_view)
       @_render_sub_views([sub_view])
 
-    _change: (models) ->
+    _change: (model) ->
       @_render_sub_views @_sub_views_for_models(models)
 
-    _append_sub_views: (sub_views) ->
-      @items = @items.concat(sub_views)
-      # pass
-      # NEED TO WRITE THIS PROPERLY
-      for view in sub_views
-        @$el.append view.el
+    _append_sub_view: (sub_view) ->
+      # Need to rewrite this if we are specifying ordering
+      @items.push(sub_view)
+      @$el.append sub_view.el
       
     _render_sub_views: (sub_views) ->
       for view in sub_views
@@ -71,22 +69,20 @@ define [
     # it will not return a corresponding view.
     _sub_views_for_models: (models) ->
       cids = new Set(model.cid for model in models)
-  
       _(@items).filter (sub_view) ->
         sub_view.model.cid in cids
 
     # Allows you to specify in sub views a 'forward_events' parameter. Then
     # when the sub view fires an event whose name is in the forward_events
     # list, the event is also fired by the CollectionView.
-    _add_event_forwarding: (sub_views) ->
-      _(sub_views).each (item) =>
-        if item.forward_events
-          for event_name in item.forward_events
-            do (event_name) =>
-              item.on event_name, =>
-                # convert arguments object into real array
-                args = [].slice.call arguments
-                args.unshift event_name
-                @trigger.apply @, args
+    _add_event_forwarding: (item) ->
+      if item.forward_events
+        for event_name in item.forward_events
+          do (event_name) =>
+            item.on event_name, =>
+              # convert arguments object into real array
+              args = [].slice.call arguments
+              args.unshift event_name
+              @trigger.apply @, args
 
   CollectionView

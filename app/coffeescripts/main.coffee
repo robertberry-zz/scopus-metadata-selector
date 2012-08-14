@@ -64,6 +64,8 @@ require [
 
   current_search = null
 
+  results_container.html results.el
+  
   app.on "search", (search) ->
     current_search = new StaggeredSearch(search_results, search)
     search_more = new MoreResults(staggered_search: current_search)
@@ -75,12 +77,12 @@ require [
 
     search_input.val search.query
     search_submit.attr "disabled", yes
-    results_container.html spinner
+    results_container.hide()
     import_button.$el.hide()
 
     search.on "results", (data) ->
       search_submit.attr "disabled", no
-      results_container.html results.el
+      results_container.show()
       import_button.$el.show()
       errors.reset []
 
@@ -93,7 +95,7 @@ require [
     selected_results.add document
   results.on "deselect", (document) ->
     selected_results.remove document
-
+  
   search_form.submit (event) ->
     event.preventDefault()
     app.navigate("search/" + search_input.val(), trigger: yes)

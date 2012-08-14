@@ -6,8 +6,6 @@ define ->
     constructor: (@collection, @search, @page=0) ->
       @search.on "results", (data) =>
         @collection.add data["results"]
-
-        console.debug @collection
       @search.on "errors", (errors) =>
         @collection.reset()
 
