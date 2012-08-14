@@ -1,10 +1,2 @@
-collections
-extensions
-models
-routers
-utils
-views
-main.js
-Renderer.js
-renderer.js
-config.js
+*
+!.gitignore

@@ -3,8 +3,9 @@
 define [
   "jquery",
   "underscore",
-  "backbone"
-], ($, _, Backbone) ->
+  "backbone",
+  "utils/Set"
+], ($, _, Backbone, Set) ->
   # For working with a view that represents a list of subviews based on a
   # collection. Specify the sub view class in the 'item_view' class property.
   # When the collection changes, the view will automatically re-render the
@@ -16,32 +17,69 @@ define [
       if not collection
         # todo: provide exception class
         throw "Must be instantiated with collection."
-      collection.bind "add", _.bind(@render, @)
-      collection.bind "remove", _.bind(@render, @)
-      collection.bind "change", _.bind(@render, @)
-      collection.bind "reset", _.bind(@render, @)
+      collection.bind "add", _.bind(@_add, @)
+      collection.bind "remove", _.bind(@_remove, @)
+      collection.bind "change", _.bind(@_change, @)
+      collection.bind "reset", _.bind(@_reset, @)
       @items = []
 
-    # Re-renders the view and its subviews. Note: this is slow, rewrite to
-    # only remove the views that have actually been removed, instead of
-    # re-rendering all.
     render: ->
-      _(@items).invoke "off"
-      _(@items).invoke "remove"
-      @$el.html ""
-      @items = @collection.map (model) =>
-        new @item_view model: model
-      @start_event_forwarding()
       @trigger "refresh", @items
-      for view in @items
-        view.render()
+
+    # Repopulate with sub views for the given set of models. Should only be
+    # invoked by the collection's event handler.
+    _reset: (models) ->
+      @_remove_sub_views(@items)
+      #@_add models
+
+    # Remove the given sub views
+    _remove_sub_views: (sub_views) ->
+      _(sub_views).invoke "off"
+      _(sub_views).invoke "remove"
+      @items = _(@items).without sub_views
+
+    # For the given set of models, remove the sub views from the
+    # collection. This should only ever be invoked by the event handler for
+    # the collection.
+    _remove: (models) ->
+      @_remove_sub_views @_sub_views_for_models(models)
+
+    # For the given set of models, add sub views. This should only ever be
+    # invoked by the event handler for the collection.
+    _add: (model) ->
+      sub_view = new @item_view model: model
+      @_append_sub_views([sub_view])
+      @_add_event_forwarding([sub_view])
+      @_render_sub_views([sub_view])
+
+    _change: (models) ->
+      @_render_sub_views @_sub_views_for_models(models)
+
+    _append_sub_views: (sub_views) ->
+      @items = @items.concat(sub_views)
+      # pass
+      # NEED TO WRITE THIS PROPERLY
+      for view in sub_views
         @$el.append view.el
+      
+    _render_sub_views: (sub_views) ->
+      for view in sub_views
+        view.render()
+
+    # Returns the sub views in the collection view for the given set of
+    # models. Note: if the model is not being shown in the collection view,
+    # it will not return a corresponding view.
+    _sub_views_for_models: (models) ->
+      cids = new Set(model.cid for model in models)
+  
+      _(@items).filter (sub_view) ->
+        sub_view.model.cid in cids
 
     # Allows you to specify in sub views a 'forward_events' parameter. Then
     # when the sub view fires an event whose name is in the forward_events
     # list, the event is also fired by the CollectionView.
-    start_event_forwarding: ->
-      _(@items).each (item) =>
+    _add_event_forwarding: (sub_views) ->
+      _(sub_views).each (item) =>
         if item.forward_events
           for event_name in item.forward_events
             do (event_name) =>
