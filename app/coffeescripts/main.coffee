@@ -22,12 +22,12 @@ require [
   "views/JSONField",
   "views/CountSubmit",
   "views/ErrorMessages",
+  "views/Spinner",
   "routers/SearchRouter",
-  "text!templates/spinner.html",
   "controllers/StaggeredSearch",
   "views/MoreResults"
-], ($, sciverse, config, Renderer, Documents, EPrints, Warnings, Errors, SearchResults, \
-    JSONField, CountSubmit, ErrorMessages, SearchRouter, spinner, \
+], ($, sciverse, config, Renderer, Documents, EPrints, Warnings, Errors, \
+    SearchResults, JSONField, CountSubmit, ErrorMessages, Spinner, SearchRouter, \
     StaggeredSearch, MoreResults) ->
   api = new sciverse.API(config.api_key)
   app = new SearchRouter(sciverse: api)
@@ -40,6 +40,7 @@ require [
   import_form = $(selectors.import_form)
   results_container = $(selectors.results_container)
   more_container = $(selectors.more_container)
+  spinner_container = $(selectors.spinner_container)
 
   search_results = new Documents()
   selected_results = new Documents()
@@ -64,10 +65,22 @@ require [
 
   current_search = null
 
+  spinner = new Spinner()
+  spinner_container.html spinner.el
+  spinner.hide()
+  spinner.render()
+
   results_container.html results.el
   
   app.on "search", (search) ->
     current_search = new StaggeredSearch(search_results, search)
+    current_search.on "load_page", ->
+      spinner.show()
+    current_search.on "page_loaded", ->
+      spinner.hide()
+    current_search.on "page_errors", ->
+      spinner.hide()    
+  
     search_more = new MoreResults(staggered_search: current_search)
     more_container.html(search_more.el)
   
@@ -78,11 +91,13 @@ require [
     search_input.val search.query
     search_submit.attr "disabled", yes
     results_container.hide()
+    spinner.show()
     import_button.$el.hide()
 
     search.on "results", (data) ->
       search_submit.attr "disabled", no
       results_container.show()
+      spinner.hide()
       import_button.$el.show()
       errors.reset []
 

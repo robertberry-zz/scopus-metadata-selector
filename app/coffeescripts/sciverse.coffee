@@ -3,13 +3,10 @@
 define [
   "jquery",
   "underscore",
-  "backbone"
-], ($, _, Backbone) ->
+  "backbone",
+  "utils/Events"
+], ($, _, Backbone, Events) ->
   exports = {}
-
-  # Allow you to use Backbone.Events as a native CoffeeScript class
-  class Events
-  _.extend(Events::, Backbone.Events)
 
   # Represents the SciVerse API. Only create one of these, it piggy-backs on
   # the actual Sciverse API structure, which is global.

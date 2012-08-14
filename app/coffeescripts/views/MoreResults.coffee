@@ -2,8 +2,7 @@
 define [
   "extensions/MustacheView",
   "text!templates/more_results.html",
-  "text!templates/spinner.html"
-], (MustacheView, template, spinner) ->
+], (MustacheView, template) ->
   class MoreResults extends MustacheView
     tagName: "div"
 
@@ -18,12 +17,15 @@ define [
     initialize: (@options) ->
       @search = @options["staggered_search"]
 
-      @search.search.on "results", =>
+      @search.on "page_loaded", =>
         if @more()
           @render()
           @$el.show()
         else
           @$el.hide()
+
+      @search.on "load_page", =>
+        @$el.hide()
 
     more: ->
       @search.how_many_more()
@@ -31,5 +33,3 @@ define [
     on_click: (event) ->
       event.preventDefault()
       @search.next()
-      @$el.html spinner
-  

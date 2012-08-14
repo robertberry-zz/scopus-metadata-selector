@@ -8,6 +8,8 @@ define ->
     search_submit: "#sciverse_search_form input[type=submit]"
     results_div: "#sciverse"
     import_form: "#sciverse_submit_form"
+    more_container: "#sciverse_more"
+    spinner_container: "#sciverse_spinner"
   # parameter name for the JSON field
   parameter_name: "data"
   results_per_page: 10
