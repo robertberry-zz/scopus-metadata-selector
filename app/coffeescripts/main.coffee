@@ -39,6 +39,7 @@ require [
   search_submit = $(selectors.search_submit)
   import_form = $(selectors.import_form)
   results_container = $(selectors.results_container)
+  more_container = $(selectors.more_container)
 
   search_results = new Documents()
   selected_results = new Documents()
@@ -64,12 +65,9 @@ require [
   current_search = null
 
   app.on "search", (search) ->
-    MORE = $("#sciverse_more")
-  
     current_search = new StaggeredSearch(search_results, search)
     search_more = new MoreResults(staggered_search: current_search)
-
-    MORE.html(search_more.el)
+    more_container.html(search_more.el)
   
     current_search.next()
     search_results.reset()

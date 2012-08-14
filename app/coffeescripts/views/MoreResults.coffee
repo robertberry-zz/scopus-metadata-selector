@@ -1,8 +1,9 @@
 
 define [
   "extensions/MustacheView",
-  "text!templates/more_results.html"
-], (MustacheView, template) ->
+  "text!templates/more_results.html",
+  "text!templates/spinner.html"
+], (MustacheView, template, spinner) ->
   class MoreResults extends MustacheView
     tagName: "div"
 
@@ -30,5 +31,5 @@ define [
     on_click: (event) ->
       event.preventDefault()
       @search.next()
-      @$el.hide()
-
+      @$el.html spinner
+  
