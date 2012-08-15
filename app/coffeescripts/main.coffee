@@ -42,6 +42,8 @@ require [
   more_container = $(selectors.more_container)
   spinner_container = $(selectors.spinner_container)
   errors_container = $(selectors.errors_container)
+  messages_box = $(selectors.messages_box)
+  search_controls = $(selectors.search_controls)
 
   search_results = new Documents()
   selected_results = new Documents()
@@ -72,22 +74,27 @@ require [
   spinner.render()
 
   results_container.append results.el
-
+  
   hide_errors = ->
-    errors_container.hide()
+    console.debug messages_box
+    messages_box.hide()
     errors.reset []
   
   show_errors = (errs) ->
-    errors_container.show()
+    console.debug messages_box
+    messages_box.show()
     errors.reset {error_message: err} for err in errs
   
   app.on "search", (search) ->
     current_search = new StaggeredSearch(search_results, search)
     current_search.on "load_page", ->
       spinner.show()
+      search_controls.show()
     current_search.on "page_loaded", ->
       spinner.hide()
-    current_search.on "page_errors", ->
+    current_search.on "page_errors", (errs) ->
+      search_controls.hide()
+      show_errors(errs)
       spinner.hide()    
   
     search_more = new MoreResults(staggered_search: current_search)
@@ -109,10 +116,12 @@ require [
       spinner.hide()
       import_button.$el.show()
       hide_errors()
+      search_controls.show()
 
     search.on "errors", (errs) ->
       search_submit.attr "disabled", no
       results_container.hide()
+      search_controls.hide()
       show_errors(errs)
 
   results.on "select", (document) ->
