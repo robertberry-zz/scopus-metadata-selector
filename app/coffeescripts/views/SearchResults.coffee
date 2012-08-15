@@ -7,7 +7,7 @@ define [
   class SearchResults extends CollectionView
     item_view: SearchResult
 
-    tagName: "div"
+    tagName: "tbody"
 
     attributes:
       class: "search_results"

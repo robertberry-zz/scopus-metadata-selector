@@ -5,7 +5,7 @@ define [
   "text!templates/error_message.html"
 ], (MustacheView, template) ->
   class ErrorMessage extends MustacheView
-    tagName: "div"
+    tagName: "li"
 
     attributes:
       class: "scopus_error"

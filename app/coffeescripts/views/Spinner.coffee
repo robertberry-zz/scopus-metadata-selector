@@ -5,7 +5,7 @@ define [
   "text!templates/spinner.html"
 ], (MustacheView, template) ->
   class Spinner extends MustacheView
-    tagName: "div"
+    tagName: "p"
 
     attributes:
       class: "spinner"

@@ -3,7 +3,7 @@ define [
   "text!templates/search_result.html"
 ], (MustacheView, template) ->
   class SearchResult extends MustacheView
-    tagName: "div"
+    tagName: "tr"
 
     attributes:
       class: "search_result"

@@ -9,6 +9,7 @@ define [
 
     attributes:
       type: "submit"
+      class: "ep_form_action_button"
 
     template: "Submit (<%= count %>)"
 

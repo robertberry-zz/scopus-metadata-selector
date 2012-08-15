@@ -1,12 +1,21 @@
-<h3><label><input type="checkbox" class="select_result" /> {{ title }}</label></h3>
-
-<table>
-  <tr>
-    <td width="150" valign="top">{{ firstauth }}</td>
-    <td width="550" valign="top">{{ sourcetitle }}<br />
-      Issue {{ issue }}, vol. {{ vol }}, pp. {{ page }}.</td>
-    <td width="100" valign="top">{{ pubdate }}</td>
-    <td valign="top"><a href="{{ inwardurl }}" target="_blank">View on Scopus</a></td>
-  </tr>
-</table>
-
+<td class="ep_columns_cell ep_columns_cell_inbox ep_columns_cell_first
+           ep_columns_cell_lastmod">
+  <input type="checkbox" class="select_result" />
+</td>
+<td class="ep_columns_cell ep_columns_cell_inbox ep_columns_cell_first
+           ep_columns_cell_lastmod">
+  {{ pubdate }}
+</td>
+<td class="ep_columns_cell ep_columns_cell_inbox ep_columns_cell_first
+           ep_columns_cell_lastmod">
+  <a href="{{ inwardurl }}" target="_blank">{{ title }}</a>
+</td>
+<td class="ep_columns_cell ep_columns_cell_inbox ep_columns_cell_first
+           ep_columns_cell_lastmod">
+  {{ firstauth }}
+</td>
+<td class="ep_columns_cell ep_columns_cell_inbox ep_columns_cell_first
+           ep_columns_cell_lastmod">
+  {{ sourcetitle }}<br />
+  Issue {{ issue }}, vol. {{ vol }}, pp. {{ page }}.
+</td>

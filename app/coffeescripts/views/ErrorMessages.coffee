@@ -7,7 +7,7 @@ define [
   class ErrorMessages extends CollectionView
     item_view: ErrorMessage
 
-    tagName: "div"
+    tagName: "ul"
 
     attributes:
       class: "scopus_errors"
