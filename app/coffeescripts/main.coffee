@@ -25,10 +25,11 @@ require [
   "views/Spinner",
   "routers/SearchRouter",
   "controllers/StaggeredSearch",
-  "views/MoreResults"
+  "views/MoreResults",
+  "controllers/SortController"
 ], ($, sciverse, config, Renderer, Documents, EPrints, Warnings, Errors, \
     SearchResults, JSONField, CountSubmit, ErrorMessages, Spinner, SearchRouter, \
-    StaggeredSearch, MoreResults) ->
+    StaggeredSearch, MoreResults, SortController) ->
   api = new sciverse.API(config.api_key)
   app = new SearchRouter(sciverse: api)
 
@@ -44,12 +45,20 @@ require [
   errors_container = $(selectors.errors_container)
   messages_box = $(selectors.messages_box)
   search_controls = $(selectors.search_controls)
+  sort_container = $(selectors.sort_container)
 
   search_results = new Documents()
   selected_results = new Documents()
   selected_eprints = EPrints.mirroring_documents(selected_results)
   results = new SearchResults(collection: search_results)
 
+  sort_controller = new SortController(sort_container, fields: [
+    {field: "Date", title: "Published"},
+    {field: "Relevancy", title: "Title"},
+    {field: "Authors", title: "Authors"},
+    {field: "SourceTitle", title: "Source"} 
+  ])
+  
   import_input = new JSONField(collection: selected_eprints, utf8: yes)
   import_input.$el.attr "name", config.parameter_name
   import_input.render()
@@ -76,12 +85,10 @@ require [
   results_container.append results.el
   
   hide_errors = ->
-    console.debug messages_box
     messages_box.hide()
     errors.reset []
   
   show_errors = (errs) ->
-    console.debug messages_box
     messages_box.show()
     errors.reset {error_message: err} for err in errs
   
@@ -132,5 +139,10 @@ require [
   search_form.submit (event) ->
     event.preventDefault()
     app.navigate("search/" + search_input.val(), trigger: yes)
+
+  sort_controller.on "sort", (sort_by) ->
+    {field, direction} = sort_by
+    app.navigate("search/" + search_input.val() + "/sort/" + field +
+      "/direction/" + direction, trigger: yes)
 
   Backbone.history.start pushState: no

@@ -11,6 +11,7 @@ define [
   class SearchRouter extends Backbone.Router
     routes:
       "search/:query": "search"
+      "search/:query/sort/:sort/direction/:direction": "search"
 
     initialize: (@options) ->
 
@@ -20,8 +21,10 @@ define [
       # its special search syntax.
       query.replace(/[^\w\s\d]/g, "")
 
-    search: (query) ->
+    search: (query, sort="Relevancy", direction="Descending") ->
       search = new sciverse.Search @options['sciverse'],
         per_page: config.results_per_page
         query: @filter_query(query)
+        sort: sort
+        order: direction
       @trigger "search", search

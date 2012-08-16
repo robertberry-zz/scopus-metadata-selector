@@ -17,7 +17,7 @@ define [
   # Represents a SciVerse search. Only use one at a time - due to how the
   # underlying SciVerse api works, new searches clobber ones mid-processing.
   class exports.Search extends Events
-    per_page: 15
+    per_page: 20
 
     sort: "Relevancy"
 
