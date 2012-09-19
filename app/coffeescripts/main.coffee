@@ -26,12 +26,15 @@ require [
   "routers/SearchRouter",
   "controllers/StaggeredSearch",
   "views/MoreResults",
+  "views/Button",
   "controllers/SortController"
 ], ($, sciverse, config, Renderer, Documents, EPrints, Warnings, Errors, \
     SearchResults, JSONField, CountSubmit, ErrorMessages, Spinner, SearchRouter, \
-    StaggeredSearch, MoreResults, SortController) ->
+    StaggeredSearch, MoreResults, Button, SortController) ->
   api = new sciverse.API(config.api_key)
-  app = new SearchRouter(sciverse: api)
+  app = new SearchRouter
+    sciverse: api
+    history: new sciverse.ImportHistory(["0030701602"])
 
   selectors = config.selectors
 
@@ -52,12 +55,12 @@ require [
   selected_eprints = EPrints.mirroring_documents(selected_results)
   results = new SearchResults(collection: search_results)
 
-  sort_controller = new SortController(sort_container, fields: [
-    {field: "Date", title: "Published"},
-    {field: "Relevancy", title: "Title"},
-    {field: "Authors", title: "Authors"},
-    {field: "SourceTitle", title: "Source"} 
-  ])
+  # sort_controller = new SortController(sort_container, fields: [
+  #   {field: "pubyr", title: "Published"},
+  #   {field: "itemtitle", title: "Title"},
+  #   {field: "auth", title: "Authors"},
+  #   {field: "srctitle", title: "Source"} 
+  # ])
   
   import_input = new JSONField(collection: selected_eprints, utf8: yes)
   import_input.$el.attr "name", config.parameter_name
@@ -92,7 +95,7 @@ require [
     messages_box.show()
     errors.reset {error_message: err} for err in errs
   
-  app.on "search", (search) ->
+  app.on "search", (search, query) ->
     current_search = new StaggeredSearch(search_results, search)
     current_search.on "load_page", ->
       spinner.show()
@@ -140,9 +143,9 @@ require [
     event.preventDefault()
     app.navigate("search/" + search_input.val(), trigger: yes)
 
-  sort_controller.on "sort", (sort_by) ->
-    {field, direction} = sort_by
-    app.navigate("search/" + search_input.val() + "/sort/" + field +
-      "/direction/" + direction, trigger: yes)
+  # sort_controller.on "sort", (sort_by) ->
+  #   {field, direction} = sort_by
+  #   app.navigate("search/" + search_input.val() + "/sort/" + field +
+  #     "/direction/" + direction, trigger: yes)
 
   Backbone.history.start pushState: no

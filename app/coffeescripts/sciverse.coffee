@@ -14,6 +14,14 @@ define [
     constructor: (@api_key) ->
       sciverse.setApiKey @api_key
 
+  # Represents a history of imported documents (via their Scopus IDs). This
+  # can be used to cause the Search object to exclude them from its results.
+  class exports.ImportHistory extends Events
+    constructor: (@scopus_ids) ->
+
+    exclude_query: ->
+      _(@scopus_ids).map((id) -> "NOT SCOPUS-ID(#{id})").join(" AND ")
+  
   # Represents a SciVerse search. Only use one at a time - due to how the
   # underlying SciVerse api works, new searches clobber ones mid-processing.
   class exports.Search extends Events
@@ -32,6 +40,18 @@ define [
       @sort = @options["sort"] if @options["sort"]
       @order = @options["order"] if @options["order"]
 
+    sort_term: ->
+      direction =
+        Ascending: "+"
+        Descending: "-"
+      direction[@order] + @sort
+
+    query_for_search: ->
+      if @options["history"]
+        "ALL(" + @query + ") AND " + @options["history"].exclude_query()
+      else
+        @query
+
     # Fetches a given page, firing the 'results' event once it has been
     # located (or the 'errors' event if there is a problem). Results are
     # cached locally. Pages are 0-indexed.
@@ -41,8 +61,8 @@ define [
       else
         @searchObj = new searchObj
         @searchObj.setNumResults @per_page
-        @searchObj.setSearch @query
-        @searchObj.setSort @sort
+        @searchObj.setSearch @query_for_search()
+        @searchObj.setSort @sort_term()
         @searchObj.setSortDirection @order
         @searchObj.setOffset(@per_page * n)
         sciverse.setCallback =>

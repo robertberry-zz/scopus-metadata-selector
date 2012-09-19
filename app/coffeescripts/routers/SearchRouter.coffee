@@ -22,9 +22,11 @@ define [
       query.replace(/[^\w\s\d]/g, "")
 
     search: (query, sort="Relevancy", direction="Descending") ->
+      query = @filter_query(query)
       search = new sciverse.Search @options['sciverse'],
         per_page: config.results_per_page
-        query: @filter_query(query)
+        query: query
         sort: sort
         order: direction
-      @trigger "search", search
+        history: @options["history"]
+      @trigger "search", search 
